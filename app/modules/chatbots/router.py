@@ -25,7 +25,7 @@ AI_MODELS = [
     "openai/gpt-oss-120b:free"
 ]
 
-def chat_fallback(messages: list):
+def chat_callback(messages: list):
     for model in AI_MODELS:
         try:
             response = client.chat.completions.create(
@@ -46,5 +46,5 @@ def chat_fallback(messages: list):
 @router.post("/")
 async def chat(req: ChatRequest):
     messages = req.history + [{"role": "user", "content": req.message}]
-    reply = chat_fallback(messages)
+    reply = chat_callback(messages)
     return {"reply": reply}

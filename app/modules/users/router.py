@@ -1,4 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.database import get_db
 from . import schemas, service
 
 router = APIRouter(
@@ -6,18 +9,18 @@ router = APIRouter(
     tags=["Users"]
 )
 @router.get("/", response_model=list[schemas.UserResponse])
-def read_user():
-    return service.get_all_users()
+async def read_user(db: AsyncSession = Depends(get_db)):
+    return await service.get_all_users(db)
 
 @router.post("/", response_model=schemas.UserResponse)
-def add_user(user: schemas.UserCreate):
-    return service.create_user(user)
+async def add_user(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
+    return await service.create_user(user, db)
 
 @router.put("/{user_id}", response_model=schemas.UserResponse)
-def update_existing_user(user_id: int, user: schemas.UserCreate):
-    return service.update_user(user_id, user)
+async def update_existing_user(user_id: int, user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
+    return await service.update_user(user_id, user, db)
 
 @router.delete("/{user_id}")
-def remove_user(user_id: int):
-    return service.delete_user(user_id)
+async def remove_user(user_id: int, db: AsyncSession = Depends(get_db)):
+    return await service.delete_user(user_id, db)
 
