@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from app.shared.utils import ApiResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from jose import jwt
+from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from app.modules.users.models import User
 import httpx
@@ -23,8 +23,11 @@ def create_access_token(data: dict) -> str:
 
 def decode_access_token(token: str) -> dict | None:
     try:
-        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    except Exception:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("sub") is None:
+            return None
+        return payload
+    except JWTError:
         return None
 
 def get_github_auth_url() -> str:
