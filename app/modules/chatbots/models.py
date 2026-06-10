@@ -17,7 +17,7 @@ class Conversation(Base):
     title: Mapped[str | None] = mapped_column(String(255))
     system_prompt: Mapped[str | None] = mapped_column(String(255))
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-    updated_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), onupdate=func.now())
+    updated_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
     message: Mapped[list["Message"]] = relationship(back_populates="conversation", order_by="Message.created_at", cascade="all, delete-orphan")
 
 class Message(Base):

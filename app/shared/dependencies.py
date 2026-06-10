@@ -12,8 +12,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
-    result = await db.execute(select(User).where(User.id == int(payload["sub"])))
-    user = result.scalar_one_or_none()
+    result = await db.execute(select(User.id, User.username, User.email).where(User.id == int(payload["sub"])))
+    user = result.mappings().one_or_none()
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

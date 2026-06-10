@@ -6,10 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.users.models import User
 from .schemas import UserCreate, UserUpdate
 
-db_users = []
-
 async def get_all_users(db: AsyncSession):
-    result = await db.execute(select(User.id, User.username, User.email))
+    result = await db.execute(select(User.id, User.username, User.email, User.created_at, User.updated_at))
     user = result.mappings().all()
     return user
 
@@ -30,7 +28,7 @@ async def update_user(user_id: int, user_data: UserUpdate, db: AsyncSession):
     update_dict = user_data.model_dump(exclude_unset=True)
     if update_dict:
         await db.execute(
-            update(User).where(User.id == user_id).values()
+            update(User).where(User.id == user_id).values(**update_dict)
         )
 
     await db.commit()

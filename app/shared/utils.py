@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 from typing import Any
+
 class ApiResponse:
-    def __init__(self, message: str, data: Any = None, status_code: int = 200):
+    def __init__(self, message: str, data: Any = None, current_user: Any = None, status_code: int = 200):
         self.message = message
         self.data = data
+        self.current_user = current_user
         self.status_code = status_code
 
     def _serialize(self, data: Any) -> Any:
@@ -23,6 +25,7 @@ class ApiResponse:
             "success": self.status_code < 400,
             "message": self.message,
             "data": self._serialize(self.data),
+            "current_user": self._serialize(self.current_user),
             "status_code": self.status_code
         }
 
