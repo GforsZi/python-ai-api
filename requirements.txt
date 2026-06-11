@@ -3,6 +3,7 @@ alembic==1.18.4
 annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.13.0
+attrs==26.1.0
 Authlib==1.7.2
 bcrypt==5.0.0
 certifi==2026.5.20
@@ -21,6 +22,8 @@ httpx==0.28.1
 idna==3.16
 jiter==0.15.0
 joserfc==1.6.8
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
 Mako==1.3.12
 MarkupSafe==3.0.3
 openai==2.38.0
@@ -32,10 +35,14 @@ PyMySQL==1.2.0
 python-dotenv==1.2.2
 python-jose==3.5.0
 python-multipart==0.0.29
+PyYAML==6.0.3
+referencing==0.37.0
+rpds-py==2026.5.1
 rsa==4.9.1
 six==1.17.0
 sniffio==1.3.1
 SQLAlchemy==2.0.50
+sqlalchemy-seeder==0.3.0
 starlette==1.1.0
 tqdm==4.67.3
 typing-inspection==0.4.2
