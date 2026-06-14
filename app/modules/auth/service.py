@@ -1,7 +1,8 @@
 from fastapi import HTTPException
+from app.modules.roles.models import Role
 from app.shared.utils import ApiResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import func, select
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from app.modules.users.models import User
@@ -93,19 +94,37 @@ async def github_login(db: AsyncSession, code: str):
 
     if not user:
         result = await db.execute(select(User).where(User.email == email))
+        count_stmt = select(func.count()).select_from(User)
+        define_admin = await db.execute(select(Role.id).where(Role.name == "admin"))
+        define_user = await db.execute(select(Role.id).where(Role.name == "user"))
+        user_role = define_user.mappings().one_or_none()
+        admin_role = define_admin.mappings().one_or_none()
+        user_count = await db.scalar(count_stmt)
         user = result.scalar_one_or_none()
 
         if user:
             user.github_id = github_id
             user.avatar_url = avatar_url
         else:
-            user = User(
-                username=username,
-                email=email,
-                github_id=github_id,
-                avatar_url=avatar_url,
-                hashed_password=None
-            )
+            user
+            if user_count == 0:
+                user = User(
+                    username=username,
+                    email=email,
+                    github_id=github_id,
+                    avatar_url=avatar_url,
+                    hashed_password=None,
+                    role_id=admin_role.id
+                )
+            else:
+                user = User(
+                    username=username,
+                    email=email,
+                    github_id=github_id,
+                    avatar_url=avatar_url,
+                    hashed_password=None,
+                    role_id=user_role.id
+                )
             db.add(user)
 
         await db.commit()

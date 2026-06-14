@@ -3,13 +3,21 @@ import bcrypt
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.modules.roles.models import Role
 from app.modules.users.models import User
 from .schemas import UserCreate, UserUpdate
 
 async def get_all_users(db: AsyncSession):
-    result = await db.execute(select(User.id, User.username, User.email, User.created_at, User.updated_at))
-    user = result.mappings().all()
-    return user
+    result = await db.execute(select(User.id, User.username, User.email, User.created_at, User.updated_at, Role.name.label("role_name")).join(User.role))
+    raw_user = result.mappings().all()
+    formated_user = []
+    for user in raw_user:
+        user_dict = dict(user)
+        user_dict["role"] = {
+            "name": user_dict.pop("role_name")
+        }
+        formated_user.append(user_dict)
+    return formated_user
 
 async def create_user(user_data: UserCreate, db: AsyncSession):
     hashed = bcrypt.hashpw(user_data.password[:72].encode(), bcrypt.gensalt()).decode()
