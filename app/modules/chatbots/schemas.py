@@ -1,11 +1,9 @@
 from datetime import datetime
-from pydantic import BaseModel
-
+from pydantic import BaseModel, ConfigDict
 from app.modules.chatbots.models import RoleEnum
 
-
 class ConversationCreate(BaseModel):
-    user_id: int
+    user_id: int | None = None
     title: str | None = None
     system_prompt: str | None = "You are a helpful assistant."
 
@@ -18,8 +16,7 @@ class MessageOut(BaseModel):
     content: str
     created_at: datetime
     
-    class config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ConversationOut(BaseModel):
     id: int
@@ -28,8 +25,7 @@ class ConversationOut(BaseModel):
     created_at: datetime
     messages: list[MessageOut] = []
 
-    class config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ChatReply(BaseModel):
     conversation_id: int

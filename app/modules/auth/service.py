@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from app.modules.roles.models import Role
 from app.shared.utils import ApiResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -106,26 +105,21 @@ async def github_login(db: AsyncSession, code: str):
             user.github_id = github_id
             user.avatar_url = avatar_url
         else:
-            user
+            role: int
             if user_count == 0:
-                user = User(
-                    username=username,
-                    email=email,
-                    github_id=github_id,
-                    avatar_url=avatar_url,
-                    hashed_password=None,
-                    role_id=admin_role.id
-                )
+                role = admin_role.id
             else:
-                user = User(
-                    username=username,
-                    email=email,
-                    github_id=github_id,
-                    avatar_url=avatar_url,
-                    hashed_password=None,
-                    role_id=user_role.id
-                )
-            db.add(user)
+                role = user_role.id
+
+            user = User(
+            username=username,
+            email=email,
+            github_id=github_id,
+            avatar_url=avatar_url,
+            hashed_password=None,
+            role_id=role
+        )
+        db.add(user)
 
         await db.commit()
         await db.refresh(user)
