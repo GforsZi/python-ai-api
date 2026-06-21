@@ -1,12 +1,19 @@
 # pyapi
 
-A FastAPI-based application with SQLAlchemy, Alembic for migrations, and modular architecture.
+A FastAPI-based application with modular architecture, featuring AI-powered chatbots and GitHub OAuth2 authentication.
+
+## Core Features
+- **Modular Architecture:** Organized into `auth`, `users`, `chatbots`, and `roles` modules for maintainability.
+- **AI Chatbot Integration:** Interface with AI models (via OpenRouter) to support conversation history and system prompts.
+- **GitHub OAuth2 Authentication:** Secure login using GitHub.
+- **Database Management:** Uses SQLAlchemy with Alembic for schema migrations.
+- **Docker-ready:** Includes `docker-compose.test.yml` for isolated testing environments with MySQL.
 
 ## Installation
 
 ### Prerequisites
 - Python 3.10+
-- MySQL (required by `aiomysql`)
+- Docker & Docker Compose (for testing environment)
 
 ### Setup
 1. Clone the repository.
@@ -14,36 +21,29 @@ A FastAPI-based application with SQLAlchemy, Alembic for migrations, and modular
    ```bash
    pip install -r requirements.txt
    ```
-3. Configure environment variables (create a `.env` file based on your environment needs).
+3. Configure environment variables (create a `.env` file).
 4. Run database migrations:
    ```bash
    alembic upgrade head
    ```
-5. Seed initial data (optional):
-   ```bash
-   python app/seeds.py
-   ```
-
-## Running the Application
-Start the development server:
-```bash
-uvicorn app.main:app --reload
-```
-The API will be available at `http://127.0.0.1:8000`.
 
 ## API Usage
 
+### GitHub Authentication
+1. **Initiate Login:** Navigate to `http://127.0.0.1:8000/auth/github`. This redirects to GitHub.
+2. **Callback:** Upon success, GitHub redirects to the callback URL (configured in your app settings) which validates the session.
+
+### AI Chatbot
+- **Create Chat:** `POST /chat/new`
+- **Send Message:** `POST /chat/send/{conversation_id}` (History is automatically managed)
+- **View History:** `GET /chat/view/{conversation_id}`
+
 ### Swagger Documentation
-FastAPI automatically generates interactive API documentation. Once the server is running, visit:
-- **Swagger UI:** `http://127.0.0.1:8000/docs`
-- **ReDoc:** `http://127.0.0.1:8000/redoc`
+Once running, access interactive documentation at `http://127.0.0.1:8000/docs`.
 
-### Example Request (via `curl`)
-If you need to interact with an endpoint (e.g., fetching users):
-
+## Testing
+Run the automated test suite using the provided script:
 ```bash
-curl -X GET "http://127.0.0.1:8000/users" \
-     -H "accept: application/json"
+bash scripts/test.sh
 ```
-
-*Note: Replace `/users` with the actual endpoint path defined in `app/modules/<module>/router.py`.*
+Ensure your test Docker container is running as defined in `docker-compose.test.yml`.

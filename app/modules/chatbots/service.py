@@ -5,6 +5,17 @@ from sqlalchemy.orm import selectinload
 from app.modules.chatbots.models import Conversation, Message, RoleEnum
 from app.modules.chatbots.schemas import ConversationCreate
 
+class ChatService:
+    def __init__(self, ai_client):
+        self.ai_client = ai_client
+
+    async def get_response(self, message: str) -> str:
+        if not message.strip():
+            raise ValueError("Messages cannot be empty")
+
+        response = await self.ai_client.chat(message)
+        return response
+
 async def create_conversation(db: AsyncSession, data: ConversationCreate):
     conv = Conversation(
         user_id=data.user_id,
