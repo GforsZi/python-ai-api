@@ -24,7 +24,11 @@ This document provides guidance for agents working within this repository.
   - **`app/modules/`**: Feature-specific domain logic (auth, users, chatbots, roles).
     - Each module typically contains: `router.py`, `service.py`, `models.py`, `schemas.py`.
   - **`app/shared/`**: Utilities and dependency injection (e.g., `get_current_user`).
-- **`tests/`**: Test suite.
+  - **`app/cli/`**: Executable CLI scripts (e.g., `seeds.py`).
+- **`tests/`**: Test suite mirroring the `app/` structure.
+  - `tests/shared/`: Tests for `app/shared/` utilities.
+  - `tests/core/`: Tests for `app/core/` infrastructure.
+  - `tests/cli/`: Tests for CLI utilities.
   - Use `conftest.py` for shared fixtures.
 - **`scripts/`**: Automation scripts.
   - `test.sh`: Standardized test runner.

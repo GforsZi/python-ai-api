@@ -3,7 +3,8 @@
 A FastAPI-based application with modular architecture, featuring AI-powered chatbots and GitHub OAuth2 authentication.
 
 ## Core Features
-- **Modular Architecture:** Organized into `auth`, `users`, `chatbots`, and `roles` modules for maintainability.
+- **Modular Architecture:** Organized into `auth`, `users`, `chatbots`, and `roles` modules.
+- **CLI Utilities:** Contains executable scripts in `app/cli/` for tasks like database seeding.
 - **AI Chatbot Integration:** Interface with AI models (via OpenRouter) to support conversation history and system prompts.
 - **GitHub OAuth2 Authentication:** Secure login using GitHub.
 - **Database Management:** Uses SQLAlchemy with Alembic for schema migrations.
@@ -26,6 +27,12 @@ A FastAPI-based application with modular architecture, featuring AI-powered chat
    ```bash
    alembic upgrade head
    ```
+
+## CLI Usage
+Database seeding can be performed using the CLI tool:
+```bash
+python app/cli/seeds.py
+```
 
 ## API Usage
 
