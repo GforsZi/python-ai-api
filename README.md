@@ -27,6 +27,10 @@ A FastAPI-based application with modular architecture, featuring AI-powered chat
    ```bash
    alembic upgrade head
    ```
+5. Run server:
+   ```bash
+   uvicorn app.main:app --reload 
+   ```
 
 ## CLI Usage
 Database seeding can be performed using the CLI tool:
