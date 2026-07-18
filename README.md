@@ -35,7 +35,7 @@ A FastAPI-based application with modular architecture, featuring AI-powered chat
 ## CLI Usage
 Database seeding can be performed using the CLI tool:
 ```bash
-python app/cli/seeds.py
+python -m app.cli.seeds
 ```
 
 ## API Usage
